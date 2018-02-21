@@ -1,0 +1,273 @@
+CREATE TABLE address
+(
+  id integer NOT NULL AUTO_INCREMENT,
+  street_address char(50),
+  city char(50),
+  parish char(50),
+  CONSTRAINT pk_address PRIMARY KEY (id)
+);
+
+CREATE TABLE allergy
+(
+  id integer NOT NULL AUTO_INCREMENT,
+  allergyName char(30),
+  CONSTRAINT pk_allergy PRIMARY KEY (id)
+);
+
+CREATE TABLE book_list
+(
+  id integer NOT NULL AUTO_INCREMENT,
+  title char(50),
+  author char(50),
+  class_id mediumint,
+  year mediumint,
+  CONSTRAINT pk_book_list PRIMARY KEY (id)
+);
+
+CREATE TABLE class
+(
+  class_room_id integer NOT NULL,
+  year integer NOT NULL,
+  teacher_id integer,
+  CONSTRAINT pk_class1 PRIMARY KEY (class_room_id, year)
+);
+
+CREATE TABLE class_room
+(
+  id integer NOT NULL AUTO_INCREMENT,
+  classRoom char(30),
+  location char(30),
+  CONSTRAINT pk_class PRIMARY KEY (id)
+);
+
+CREATE TABLE class_student
+(
+  class_id integer NOT NULL,
+  stident_id integer NOT NULL,
+  year integer,
+  CONSTRAINT pk_class_student PRIMARY KEY (class_id, stident_id)
+);
+
+CREATE TABLE document_type
+(
+  id integer NOT NULL AUTO_INCREMENT,
+  documentType char(50),
+  CONSTRAINT pk_document_type PRIMARY KEY (id)
+);
+
+CREATE TABLE exam
+(
+  exam_type_id integer NOT NULL,
+  school_term_id integer NOT NULL,
+  date date NOT NULL,
+  class_id mediumint NOT NULL,
+  year integer NOT NULL,
+  CONSTRAINT pk_exam PRIMARY KEY (exam_type_id, date, year, class_id, school_term_id)
+);
+
+CREATE TABLE exam_score
+(
+  id integer NOT NULL AUTO_INCREMENT,
+  student_id mediumint,
+  exam_id mediumint,
+  score integer,
+  subject_id mediumint,
+  CONSTRAINT pk_exam_score PRIMARY KEY (id)
+);
+
+CREATE TABLE exam_subject
+(
+  exam_id integer NOT NULL,
+  subject_id integer NOT NULL,
+  CONSTRAINT pk_exam_subject PRIMARY KEY (exam_id, subject_id)
+);
+
+CREATE TABLE exam_type
+(
+  id integer NOT NULL AUTO_INCREMENT,
+  examType char(60),
+  CONSTRAINT pk_exam_type PRIMARY KEY (id)
+);
+
+CREATE TABLE family
+(
+  id integer NOT NULL AUTO_INCREMENT,
+  student_id integer NOT NULL,
+  relation char(15) NOT NULL,
+  comment char(50),
+  address_id integer,
+  first_name char(50),
+  last_name char(50),
+  email char(50),
+  cell_phone char(15),
+  home_phone char(15),
+  ocupation_id integer,
+  CONSTRAINT pk_family PRIMARY KEY (id)
+);
+
+CREATE TABLE immunizable
+(
+  id integer NOT NULL AUTO_INCREMENT,
+  CONSTRAINT pk_immunizable PRIMARY KEY (id)
+);
+
+CREATE TABLE institution
+(
+  id integer NOT NULL AUTO_INCREMENT,
+  name char(50),
+  CONSTRAINT pk_institution PRIMARY KEY (id)
+);
+
+CREATE TABLE occupation
+(
+  id integer NOT NULL AUTO_INCREMENT,
+  name char(50),
+  CONSTRAINT pk_occupation PRIMARY KEY (id)
+);
+
+CREATE TABLE personality
+(
+  id integer NOT NULL AUTO_INCREMENT,
+  name char(50) NOT NULL,
+  CONSTRAINT pk_personality PRIMARY KEY (id, name)
+);
+
+CREATE TABLE qualification
+(
+  teacher_id integer NOT NULL,
+  institution_id integer,
+  qualificationName char(30),
+  CONSTRAINT pk_qualification PRIMARY KEY (teacher_id)
+);
+
+CREATE TABLE school
+(
+  id integer NOT NULL AUTO_INCREMENT,
+  name char(80),
+  address_id integer,
+  school_year integer,
+  CONSTRAINT pk_school PRIMARY KEY (id)
+);
+
+CREATE TABLE school_term
+(
+  term_id integer NOT NULL,
+  schoolTerm char(50),
+  number_sessions integer,
+  year integer NOT NULL,
+  start_date date,
+  end_date date,
+  CONSTRAINT pk_school_term PRIMARY KEY (term_id, year)
+);
+
+CREATE TABLE score_scale
+(
+  score_type_id integer,
+  code char(30),
+  lowerBound decimal(5,2) unsigned,
+  upperBound decimal(5,2) ,
+  CONSTRAINT pk_score_scale PRIMARY KEY (score_type_id,code)
+);
+
+CREATE TABLE score_type
+(
+  id integer NOT NULL AUTO_INCREMENT,
+  description char(30),
+  comment char(30),
+  CONSTRAINT pk_score_type PRIMARY KEY (id)
+);
+
+CREATE TABLE student
+(
+  id integer NOT NULL AUTO_INCREMENT,
+  first_name char(50),
+  last_name char(50),
+  address_id integer,
+  date_of_birth date,
+  admission_date date,
+  gender char(1),
+  no_sis integer,
+  no_brother integer,
+  distance_from_school decimal(6,2) unsigned,
+  family_id integer,
+  CONSTRAINT pk_student PRIMARY KEY (id)
+);
+
+CREATE TABLE student_attendance
+(
+  year integer NOT NULL,
+  term_id integer NOT NULL,
+  student_id integer NOT NULL,
+  absent integer,
+  late bigint,
+  CONSTRAINT pk_student_attendance PRIMARY KEY (year, term_id, student_id)
+);
+
+CREATE TABLE student_document
+(
+  document_type_id integer NOT NULL,
+  student_id integer NOT NULL,
+  path char(100),
+  CONSTRAINT pk_student_document PRIMARY KEY (document_type_id, student_id)
+);
+
+CREATE TABLE student_personality
+(
+  personlity_id integer NOT NULL,
+  student_id integer NOT NULL,
+  year integer,
+  rating integer,
+  CONSTRAINT pk_student_personality PRIMARY KEY (personlity_id, student_id)
+);
+
+CREATE TABLE subject
+(
+  id integer NOT NULL AUTO_INCREMENT,
+  name decimal(0,0),
+  CONSTRAINT pk_subject PRIMARY KEY (id)
+);
+
+CREATE TABLE teacher
+(
+  id integer NOT NULL AUTO_INCREMENT,
+  first_name decimal(0,0),
+  last_name decimal(0,0),
+  address_id integer,
+  type char(30),
+  CONSTRAINT pk_teacher PRIMARY KEY (id)
+);
+
+CREATE TABLE term
+(
+  id integer NOT NULL AUTO_INCREMENT,
+  termName char(50),
+  CONSTRAINT pk_term PRIMARY KEY (id)
+);
+
+ALTER TABLE class ADD CONSTRAINT fk_class_room
+  FOREIGN KEY (class_room_id) REFERENCES class_room (id);
+
+ALTER TABLE family ADD CONSTRAINT fk_family_occupation
+  FOREIGN KEY (ocupation_id) REFERENCES occupation (id);
+
+ALTER TABLE qualification ADD CONSTRAINT fk_qualification_institution
+  FOREIGN KEY (institution_id) REFERENCES institution (id);
+
+ALTER TABLE school_term ADD CONSTRAINT fk_school_term
+  FOREIGN KEY (term_id) REFERENCES term (id);
+
+ALTER TABLE student ADD CONSTRAINT fk_student_address
+  FOREIGN KEY (address_id) REFERENCES address (id);
+
+ALTER TABLE student ADD CONSTRAINT fk_student_family
+  FOREIGN KEY (family_id) REFERENCES family (id);
+
+ALTER TABLE student_document ADD CONSTRAINT fk_student_document_student
+  FOREIGN KEY (student_id) REFERENCES student (id);
+
+ALTER TABLE student_document ADD CONSTRAINT fk_student_document_type
+  FOREIGN KEY (document_type_id) REFERENCES document_type (id);
+
+ALTER TABLE teacher ADD CONSTRAINT fk_teacher_address
+  FOREIGN KEY (address_id) REFERENCES address (id);
+
