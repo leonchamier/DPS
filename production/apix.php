@@ -9,20 +9,11 @@ $input = json_decode(file_get_contents('php://input'),true);
 // connect to the mysql database
 $link = mysqli_connect('localhost', 'root', '', 'schooldb');
 mysqli_set_charset($link,'utf8');
- 
-$include_action=True;
-
+  
 // retrieve the table and key from the path
 $table = preg_replace('/[^a-z0-9_]+/i','',$request[0]);
-if (sizeof($request)==2){
-  $key =  preg_replace('/[^a-z0-9_]+/i','',$request[1]);
-  $include_action=False;
-}  
-if (sizeof($request)>2 && $request[1]!='api'){
-  $include_action=False;
-}  
-
-
+$key =  preg_replace('/[^a-z0-9_]+/i','',$request[1]);
+  
 if (!array_key_exists($table, $tablesjson)){
   http_response_code(404);
   die('Error retrieving information');
@@ -42,7 +33,7 @@ for ($i=0;$i<count($columns);$i++) {
   $set.=($values[$i]===null?'NULL':'"'.$values[$i].'"');
 }
 $action='';  
-if ($include_action){
+if (!$key){
   $action=" ,'' as actions ";
 }  
 
@@ -52,9 +43,8 @@ for ($x = 0; $x < sizeof($keyfields) && sizeof($request)>1 ; $x++) {
    if($x>0){
      $where=$where." and ";
    }
-
    $fieldvalue=$request[$x+1];
-   if ($tablesjson->{$table}->{"fields"}->{trim($keyfields[$x])}=="char"){
+   if ($tablesjson->{$table}->{"fields"}->{$keyfields[$x]}=="char"){
      $fieldvalue="'".$fieldvalue."'";
    }
    $where =$where." ".$keyfields[$x]."=".$fieldvalue; 
@@ -104,14 +94,10 @@ if ($method == 'GET' ) {
             }
             $tmp=trim($keyfields[$x]);
             $keyvalues=$keyvalues.$rec->$tmp;
-            //var_dump($rec);
-           // echo  "\n\n".$keyfields[1]." jey value ".$rec->$keyfields[$x]."  >>".$rec->code."<<  ".$x;
         }
          $rec->id=$keyvalues;
-         if ($include_action){
-           $rec->actions='<button onclick="editThis(\''.$keyvalues.'\',this)" style="margin-left:10px" class="btn btn-primary btn-sm"   data-target="#edit-button" ><i class="glyphicon glyphicon-edit"></i></button>';
-           $rec->actions.='<button onclick="deleteThis(\''.$keyvalues.'\',this)" style="margin-left:10px" class="btn btn-danger btn-sm"  data-target="#delete-button" ><i class="glyphicon glyphicon-trash"></i></button>';
-         }
+         $rec->actions='<button onclick="editThis(\''.$keyvalues.'\',this)" style="margin-left:10px" class="btn btn-primary btn-sm"   data-target="#edit-button" ><i class="glyphicon glyphicon-edit"></i></button>';
+	       $rec->actions.='<button onclick="deleteThis(\''.$keyvalues.'\',this)" style="margin-left:10px" class="btn btn-danger btn-sm"  data-target="#delete-button" ><i class="glyphicon glyphicon-trash"></i></button>';
       } 
 	   echo ($i>0?',':'').json_encode($rec);
   }

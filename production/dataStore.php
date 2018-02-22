@@ -1,6 +1,7 @@
 <?php
 $filedata=$_POST["file"];
-$file = fopen("tempCrud.html","w");
+$filename=$_POST["filename"];
+$file = fopen($filename,"w");
 echo $filedata;
 fwrite($file,$filedata);
 fclose($file);

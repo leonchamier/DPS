@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Maintain  address</title>
+    <title>Maintain Exam Score</title>
 
     <!-- Bootstrap -->
 <!--    <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -190,7 +190,7 @@
               <ul class="nav navbar-nav navbar-left">
                 <li class="">
                   <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <span style="font-size: 20px;color:"> Address</span>
+                    <span style="font-size: 20px;color:"> Exam Score</span>
                   </a>
                   
                 </li>
@@ -296,8 +296,8 @@
             </p>
             <table id="classTable" class="display" cellspacing="0" data-toolbar=".toolbar" data-query-params="queryParams" data-pagination="true"
                 data-striped="true" data-search="true" data-show-multi-sort="true" data-sort-priority='[{"sortName": "name","sortOrder":"desc"},{"sortName":"location","sortOrder":"desc"}]'>
-                <thead> <tr> <th data-field="id" data-sortable="true" data-visible="false">ID</th><th data-field="street_address" data-sortable="true">Street Address</th><th data-field="city" data-sortable="true">City</th><th data-field="actions" data-searchable="false">Action</th></tr></thead>
-                <tfoot> <tr>  <th class="hidden">ID</th><th>Street Address</th><th>City</th><th>Action</th></tr></tfoot>
+                <thead> <tr> <th data-field="id" data-sortable="true" data-visible="false">ID</th><th data-field="student_id" data-sortable="true">Student Id</th><th data-field="exam_id" data-sortable="true">Exam Id</th><th data-field="actions" data-searchable="false">Action</th></tr></thead>
+                <tfoot> <tr>  <th class="hidden">ID</th><th>Student Id</th><th>Exam Id</th><th>Action</th></tr></tfoot>
             </table>
         </div>
     </div>
@@ -308,12 +308,12 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h3 class="modal-title">Address Form</h3>
+                        <h3 class="modal-title">Exam Score Form</h3>
                     </div>
                     <div class="modal-body form">
                         <form id="form" class="form-horizontal" data-toggle="validator">
                             <input type="hidden" value="" name="id" />
-                            <div class="form-body"> <div class="form-group">  <label class="control-label col-md-3">Street Address</label><div class="col-md-9"> <input name="street_address" placeholder="Street Address" class="form-control" type="text" required><span class="help-block"></span> </div> </div><div class="form-group">  <label class="control-label col-md-3">City</label><div class="col-md-9"> <input name="city" placeholder="City" class="form-control" type="text" required><span class="help-block"></span> </div> </div><div class="form-group">  <label class="control-label col-md-3">Parish</label><div class="col-md-9"> <input name="parish" placeholder="Parish" class="form-control" type="text" required><span class="help-block"></span> </div> </div></div><div class="modal-footer">
+                            <div class="form-body"> <div class="form-group">  <label class="control-label col-md-3">Student Id</label><div class="col-md-9"> <input name="student_id" placeholder="Student Id" class="form-control" type="text" required><span class="help-block"></span> </div> </div><div class="form-group">  <label class="control-label col-md-3">Exam Id</label><div class="col-md-9"> <input name="exam_id" placeholder="Exam Id" class="form-control" type="text" required><span class="help-block"></span> </div> </div><div class="form-group">  <label class="control-label col-md-3">Score</label><div class="col-md-9"> <input name="score" placeholder="Score" class="form-control" type="text" required><span class="help-block"></span> </div> </div><div class="form-group">  <label class="control-label col-md-3">Subject Id</label><div class="col-md-9"> <input name="subject_id" placeholder="Subject Id" class="form-control" type="text" required><span class="help-block"></span> </div> </div></div><div class="modal-footer">
                                 <input id="submit" type="submit" class="btn btn-info" value="Save" onclick="saveRecord()">
                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
                             </div>
@@ -364,7 +364,7 @@
         
                 $(document).ready(function () {
                     //
- data_model={"id": "","street_address": "","city": "","parish": ""}
+ data_model={ "id": "0","student_id": "","exam_id": "","score": "","subject_id": ""}
                     
                     bootstrapTableIndex = 0;
                     save_method = '';
@@ -380,24 +380,24 @@
   },
   excluded: [':disabled'],
  fields: {
- street_address:{
+ student_id:{
    validators: {
      notEmpty: {
-        message: 'Street Address is  required and cannot be empty'
+        message: 'Student Id is  required and cannot be empty'
       }
     }
  },
- city:{
+ exam_id:{
    validators: {
      notEmpty: {
-        message: 'City is  required and cannot be empty'
+        message: 'Exam Id is  required and cannot be empty'
       }
     }
  },
- parish:{
+ score:{
    validators: {
      notEmpty: {
-        message: 'Parish is  required and cannot be empty'
+        message: 'Score is  required and cannot be empty'
       }
     }
  }
@@ -414,7 +414,7 @@
                             if (save_method == 'PUT') {
                                 $.ajax({
                                     type: "PUT",
-                                    url: './api.php/address/' + data_model['id'],
+                                    url: './api.php/exam_score/' + data_model['id'],
                                     data: JSON.stringify(data_model), // serializes the form's elements.
                                     success: function (data) {
                                         $('#modal_form').modal('hide');
@@ -436,7 +436,7 @@
                             if (save_method == 'POST') {
                                 $.ajax({
                                     type: "POST",
-                                    url: './api.php/address/',
+                                    url: './api.php/exam_score/',
                                     data: JSON.stringify(data_model), // serializes the form's elements.                        
                                     success: function (data) {
                                         console.log('after add -1' + data);
@@ -484,12 +484,12 @@
                         $('#form')[0].reset(); // reset form on modals
                         $('input[name=id]').val('');
                         $('#modal_form').modal('show'); // show bootstrap modal                
-                        $('.modal-title').text('Add Address'); // Set Title to Bootstrap modal title
+                        $('.modal-title').text('Add Exam Score'); // Set Title to Bootstrap modal title
                     });
         
         
                     $.ajax({
-                        url: './api.php/address',
+                        url: './api.php/exam_score',
                         type: 'GET',
                         dataType: 'json',
                         success: function (data) {
@@ -519,7 +519,7 @@
                         if (!confirm) return false;
                         $.ajax({
                             type: "DELETE",
-                            url: './api.php/address/' + id,
+                            url: './api.php/exam_score/' + id,
                             success: function (data) {
                                 console.log('deleted ' + id);
                                 //$('#classTable').bootstrapTable('remove', { field: 'id', values: ['' + id] });
@@ -543,7 +543,7 @@
                     bootstrapTableIndex = $(el).closest("tr").index();
                     save_method = 'PUT';
                     $.ajax({
-                        url: './api.php/address/' + id,
+                        url: './api.php/exam_score/' + id,
                         type: 'GET',
                         dataType: 'json',
                         success: function (data) {
@@ -554,7 +554,7 @@
                             for (var x in data_model) {
                                 $('input[name=' + x + ']').val(data_model[x]);
                             }
-                            $('.modal-title').text('Edit Address');
+                            $('.modal-title').text('Edit Exam Score');
                             $('#modal_form').modal('show');
                         },
                         beforeSend: function (xhr, settings) { xhr.setRequestHeader('Authorization', 'Bearer ' + token); }

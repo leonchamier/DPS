@@ -341,7 +341,7 @@ console.log("i am here");
                         $('#form')
                             .bootstrapValidator('disableSubmitButtons', false)
                             .bootstrapValidator('resetForm', true);
-                        data_model = data;
+                        data_model = data[0];
                         $('input[name=id]').val(id);
                         for (var x in data_model) {
                             $('input[name=' + x + ']').val(data_model[x]);
